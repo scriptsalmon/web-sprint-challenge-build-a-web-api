@@ -1,17 +1,24 @@
-// Write your "actions" router here!
 const express = require('express');
-
 const Actions = require('./actions-model');
+const { validateActionId } = require('./actions-middlware');
 
 const router = express.Router();
 
 
-router.get('/', (req, res) => {
-    res.status(200).json({ message: "actions router synced"});
+router.get('/', (req, res, next) => {
+    Actions.get()
+      .then(actions => {
+          res.status(200).json(actions);
+      })
+      .catch(next);
 })
 
-router.get('/:id', (req, res) => {
-    res.status(200).json('nice');
+router.get('/:id', validateActionId, (req, res, next) => {
+    Actions.get(req.params.id)
+      .then(actions => {
+          res.status(200).json(actions);
+      })
+      .catch(next);
 })
 
 router.post('/', (req, res) => {
@@ -26,5 +33,12 @@ router.delete('/:id', (req, res) => {
     res.status(200).json('nice');
 })
 
+
+function handleError (err, req, res, next) {
+    res.status(err.status || 500).json({
+        prodMessage: "malfunction in projects router",
+        stack: err.stack
+    })
+}
 
 module.exports = router;
