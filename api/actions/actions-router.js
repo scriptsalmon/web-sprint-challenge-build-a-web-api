@@ -23,24 +23,45 @@ router.get('/:id', validateActionId, (req, res, next) => {
       .catch(next);
 })
 
-router.post('/', validateAction, (req, res) => {
-    res.status(200).json('nice');
+router.post('/', validateAction, (req, res, next) => {
+    Actions.insert(req.body)
+      .then(action => {
+          res.status(201).json(action);
+      })
+      .catch(next);
 })
 
-router.put('/:id', (req, res) => {
-    res.status(200).json('nice');
+router.put('/:id', validateActionId, validateAction, (req, res, next) => {
+    const { project_id, description, notes } = req.params;
+    console.log(req.params)
+    if(!project_id || !description || !notes){
+        next({ status: 400, message: "NEW project_id, description, and notes field must be filled" });
+    } else {
+        Actions.update(req.params.id, req.params)
+            .then(updatedAction => {
+                res.status(204).json(updatedAction);
+            })
+    }
+
 })
 
-router.delete('/:id', (req, res) => {
-    res.status(200).json('nice');
+router.delete('/:id', validateActionId, async (req, res) => {
+    try {
+        const result = await Actions.remove(req.params.id);
+        console.log(result);
+        res.json(req.body);
+    } catch (err) {
+        next(err);
+    }
 })
 
 
 function handleError (err, req, res, next) {
     res.status(err.status || 500).json({
-        prodMessage: "malfunction in projects router",
+        message: err.message,
         stack: err.stack
     })
 }
 
+router.use(handleError);
 module.exports = router;

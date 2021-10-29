@@ -27,7 +27,7 @@ function validProject (req, res, next) {
 
 function handleError (err, req, res, next) {
     res.status(err.status || 500).json({
-        prodMessage: "malfunction in projects router",
+        message: err.message,
         stack: err.stack
     })
 }
