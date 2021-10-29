@@ -14,12 +14,6 @@ router.get('/', (req, res, next) => {
         res.status(200).json(projects);
       })
       .catch(next);
-    //   .catch(err => {
-    //       res.status(400).json({ 
-    //         message: 'getting projects failed',
-    //         stack: err.stack
-    //         });
-    //   })
 })
 
 router.get('/:id', validateProjectId, (req, res) => {
@@ -31,9 +25,29 @@ router.post('/', validProject, (req, res) => {
     res.status(201).json(req.body);
 })
 
-router.put('/:id', validateProjectId, (req, res) => {
-    Projects.update(req.body)
-    res.status(204).json(req.body);
+router.put('/:id', validateProjectId, validProject, (req, res, next) => {
+    Projects.update(req.params.id, req.body)
+      .then(updatedProject => {
+        res.status(204).json(updatedProject);
+    })
+    .catch(next)
+})
+
+router.delete('/:id', validateProjectId, async (req, res) => {
+    try {
+        await Projects.remove(req.params.id)
+        res.status()
+    } catch (error) {
+        next(error)
+    }
+})
+
+router.get('/:id/actions', (req, res, next) => {
+    Projects.getProjectActions(req.params.id)
+      .then(projectActions => {
+          res.status(200).json(projectActions);
+      })
+      .catch(next)
 })
 
 router.use(handleError);

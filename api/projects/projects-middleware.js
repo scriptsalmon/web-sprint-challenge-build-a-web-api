@@ -8,6 +8,7 @@ async function validateProjectId (req, res, next) {
             req.body = validProject;
             next();
         } else {
+            res.status(404).json("not a valid project id")
             next({ status: 404, message: "no project with given id" })
         }
     } catch (error) {
@@ -27,7 +28,6 @@ function validProject (req, res, next) {
 function handleError (err, req, res, next) {
     res.status(err.status || 500).json({
         prodMessage: "malfunction in projects router",
-        message: err.message,
         stack: err.stack
     })
 }
