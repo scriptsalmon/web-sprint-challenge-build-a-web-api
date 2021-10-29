@@ -31,18 +31,38 @@ router.post('/', validateAction, (req, res, next) => {
       .catch(next);
 })
 
-router.put('/:id', validateActionId, validateAction, (req, res, next) => {
-    const { project_id, description, notes } = req.params;
-    console.log(req.params)
-    if(!project_id || !description || !notes){
-        next({ status: 400, message: "NEW project_id, description, and notes field must be filled" });
-    } else {
-        Actions.update(req.params.id, req.params)
-            .then(updatedAction => {
-                res.status(204).json(updatedAction);
-            })
-    }
+// router.put('/:id', validateActionId, validateAction, (req, res, next) => {
+//     const { project_id, description, notes } = req.params;
+//     console.log(req.params)
+//     if(!project_id || !description || !notes){
+//         next({ status: 400, message: "project_id, description, and notes field must be filled" });
+//     } else {
+//         Actions.update(req.params.id, req.params)
+//             .then(updatedAction => {
+//                 res.status(204).json(updatedAction);
+//             })
+//     }
+// })
 
+router.put('/:id', async (req, res, next) => {
+    try {
+        const validAction = await Actions.get(req.params.id)
+        if(validAction){
+            const { project_id, description, notes } = req.body;
+            if(!project_id || !description || !notes){
+                next({ status: 400, message: "project_id, description, and notes field must be filled" });
+            } else {
+                const updated = Actions.update(req.params.id, req.body)
+                res.status(204).json(updated);
+                //   .then(updated => {
+                //       console.log(updated);
+                //       res.status(204).json(updated);
+                //   })
+            }
+        }
+    } catch (error) {
+    next(error)
+    }
 })
 
 router.delete('/:id', validateActionId, async (req, res) => {
