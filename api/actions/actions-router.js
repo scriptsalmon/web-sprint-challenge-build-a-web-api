@@ -1,6 +1,8 @@
 const express = require('express');
 const Actions = require('./actions-model');
-const { validateActionId } = require('./actions-middlware');
+const { validateActionId,
+        validateAction, 
+      } = require('./actions-middlware');
 
 const router = express.Router();
 
@@ -21,7 +23,7 @@ router.get('/:id', validateActionId, (req, res, next) => {
       .catch(next);
 })
 
-router.post('/', (req, res) => {
+router.post('/', validateAction, (req, res) => {
     res.status(200).json('nice');
 })
 
