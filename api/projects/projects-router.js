@@ -25,12 +25,24 @@ router.post('/', validProject, (req, res) => {
     res.status(201).json(req.body);
 })
 
-router.put('/:id', validateProjectId, validProject, (req, res, next) => {
-    Projects.update(req.params.id, req.body)
-      .then(updatedProject => {
-        res.status(204).json(updatedProject);
-    })
-    .catch(next)
+router.put('/:id', validProject, async (req, res, next) => {
+    try{
+        if(!req.params){
+            next({ status: 400, message: "provide an id please"})
+        }
+        const validProject = await Projects.get(req.params.id);
+        if(validProject){
+            Projects.update(req.params.id, req.body)
+            .then(updatedProject => {
+              res.status(204).json(updatedProject);
+        })
+        } else {
+            res.status(404).json("not a valid project id")
+            next({ status: 404, message: "no project with given id" })
+        }
+    } catch (error) {
+        next(error);
+    }
 })
 
 router.delete('/:id', validateProjectId, async (req, res) => {

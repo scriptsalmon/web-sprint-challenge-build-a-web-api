@@ -3,6 +3,9 @@ const Projects = require('./projects-model');
 
 async function validateProjectId (req, res, next) {
     try{
+        if(!req.params){
+            next({ status: 400, message: "provide an id please"})
+        }
         const validProject = await Projects.get(req.params.id);
         if(validProject){
             req.body = validProject;
