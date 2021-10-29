@@ -147,7 +147,31 @@ We have provided test data for all the resources.
 Be prepared to demonstrate your understanding of this week's concepts by answering questions on the following topics. You might prepare by writing down your own answers before hand.
 
 1. The core features of Node.js and Express and why they are useful.
+
+  - Node is single threaded which removes the comlexity involvedi n handling multiple threads.
+  - Node.js uses the same programming language and paradigm for both client and server. We minimize context switching and share code between the client and the server.
+
+  - Express is a Node.js module. 
+  - We can build web apps, serve SPAs, build RESTful web services that work with JSON..
+  - Express is simple, extensible, light-weight, and allows for more flexibility.
+  - Compatable with middleware!
+  - It abstracts away common tasks.
+
 1. Understand and explain the use of Middleware.
+
+  - Middleware functions can get the req and res objects, operate on them, and are able to trigger actions when asked.
+  - Can change the request or response.
+
 1. The basic principles of the REST architectural style.
+
+  - Everything is a resource
+  - Each resource is accessible via a unique URL
+  - Resources can have multiple representations
+  - Communication happens over a stateless protocol (HTTP)
+  - Resource management happens via HTTP methods
+
 1. Understand and explain the use of Express Routers.
+
+  - 
+
 1. Describe tooling used to manually test the correctness of an API.
