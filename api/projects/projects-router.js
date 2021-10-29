@@ -27,9 +27,6 @@ router.post('/', validProject, (req, res) => {
 
 router.put('/:id', validProject, async (req, res, next) => {
     try{
-        if(!req.params){
-            next({ status: 400, message: "provide an id please"})
-        }
         const validProject = await Projects.get(req.params.id);
         if(validProject){
             Projects.update(req.params.id, req.body)
@@ -48,7 +45,7 @@ router.put('/:id', validProject, async (req, res, next) => {
 router.delete('/:id', validateProjectId, async (req, res) => {
     try {
         await Projects.remove(req.params.id)
-        res.status()
+        res.json(req.body);
     } catch (error) {
         next(error)
     }
